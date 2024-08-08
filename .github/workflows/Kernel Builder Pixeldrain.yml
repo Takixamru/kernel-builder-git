@@ -192,7 +192,8 @@ jobs:
        LD=ld.lld 
        AR=llvm-ar 
        NM=llvm-nm 
-       STRIP=ll      OBJCOPY=llvm-objcopy 
+       STRIP=llvm-strip
+       OBJCOPY=llvm-objcopy 
        OBJDUMP=llvm-objdump 
        READELF=llvm-readelf 
        make -j$(nproc --all) O=out ARCH=arm64 ${{ github.event.inputs.KERNEL_DEFCONFIG }} 
