@@ -7,7 +7,7 @@ on:
       KERNEL_URL:
         description: 'Enter your Kernel Link'
         required: true
-        default: 'https://github.com/PaimonLab/kernel_xiaomi_stone.git 
+        default: 'https://github.com/PaimonLab/kernel_xiaomi_stone.git' 
         
       KERNEL_DEFCONFIG:
         description: 'Enter the defconfig available in your kernel'
