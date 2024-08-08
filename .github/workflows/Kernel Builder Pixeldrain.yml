@@ -7,27 +7,27 @@ on:
       KERNEL_URL:
         description: 'Enter your Kernel Link'
         required: true
-        default: 'https://github.com/cumaRull/kernel_realme_even.git -b master'
+        default: 'https://github.com/PaimonLab/kernel_xiaomi_stone.git 
         
       KERNEL_DEFCONFIG:
         description: 'Enter the defconfig available in your kernel'
         required: true
-        default: 'even_defconfig'
+        default: 'holi-qgki_defconfig'
 
       KBUILD_USER:
         description: 'Enter the custom username build available in your kernel'
         required: true
-        default: 'cumaRull'
+        default: 'Taki'
 
       KBUILD_HOST:
         description: 'Enter the user custom host name available in your kernel'
         required: true
-        default: 'githubAction'  
+        default: 'GoogleFucksYou'  
         
       CLANG_URL:
         description: 'Clang Url'
         required: true
-        default: 'https://github.com/ZyCromerZ/Clang/releases/download/19.0.0git-20240227-release/Clang-19.0.0git-20240227.tar.gz'
+        default: 'https://github.com/XSans0/WeebX-Clang/releases/download/WeebX-Clang-20.0.0git-release/WeebX-Clang-20.0.0git.tar.gz'
    #   AARCH64_URL:
   #      description: 'Arrch64-GCC'
   #      required: true
@@ -43,11 +43,11 @@ on:
       ZIP_NAME:
         description: 'Name for the zip file'
         required: true
-        default: 'TridentNothDeath-Even' 
+        default: 'PaimonBeta-Stone' 
       ANYKERNEL_URL:
         description: 'YOUR ANYKERNEL LINK'
         required: true
-        default: 'https://github.com/cumaRull/AnyKernel3.git -b master'
+        default: 'https://github.com/Takixamru/Anykernel3-Stone.git'
       
                   
       
@@ -90,18 +90,11 @@ jobs:
           sudo apt-get install wget -y
     - name: Set Properties
       run: |
-        echo "BUILD_DATE=$(TZ=Asia/Jakarta date +%Y-%m-%d )" >> $GITHUB_ENV
-        echo "BUILD_TIME=$(TZ=Asia/Jakarta date +%H:%M:%S)" >> $GITHUB_ENV
+        echo "BUILD_DATE=$(TZ=Asia/Kolkata date +%Y-%m-%d )" >> $GITHUB_ENV
+        echo "BUILD_TIME=$(TZ=Asia/Kolkata date +%H:%M:%S)" >> $GITHUB_ENV
         echo "START=$(date +"%s")" >> $GITHUB_ENV
         echo "END=$(date +"%s")" >> $GITHUB_ENV
         
-    - name: Setup SSH Keys
-      uses: webfactory/ssh-agent@v0.5.4
-      with:
-          ssh-private-key: |
-              ${{ secrets.SSH_PRIVATE_KEY }}
-
-    
 #    - name: Install repo
 #      run: |
 #        mkdir ~/bin
@@ -135,7 +128,7 @@ jobs:
     - name: Clone Clang
       working-directory: android/
       run: |
-       mkdir -p clang && cd clang
+       mkdir -p clang-llvm && cd clang-llvm
        wget ${{ github.event.inputs.CLANG_URL }}
        tar -xvzf *.gz
        rm -f *.gz
@@ -178,19 +171,9 @@ jobs:
       continue-on-error: true    
 
     
-    - name: Notify in Telegram
-      working-directory: android/kernel
-      run: |
+    
               
               
-              DIFF=$((${{ env.END }} - ${{ env.START }}))
-              minutes=$(($DIFF / 60))
-              seconds=$(($DIFF % 60))
-              curl -s -X POST "https://api.telegram.org/bot${{ secrets.TG_BOT_TOKEN }}/sendMessage" \
-              -d chat_id="${{ secrets.TG_CHAT_ID }}" \
-              -d text="Build Started With: <code>GithubAction</code>%0AUSING DEFCONFIG:<b>${{ github.event.inputs.KERNEL_DEFCONFIG }}</b>%0ALast Commit:<b>$(git log --pretty=format:'"%h : %s"' -1)</b>%0AKernel Tree:${{ github.event.inputs.KERNEL_URL }}%0A%0AStarted On: <b>${{ env.BUILD_DATE }}</b> | <b>${{ env.BUILD_TIME }}</b>%0A Use Compiler: <b>$(${GITHUB_WORKSPACE}/android/clang/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/ */ /g')</b>" \
-              -d parse_mode=html \
-              -d disable_web_page_preview=true
               
     - name: Building Kernel
       working-directory: android/kernel
@@ -201,7 +184,7 @@ jobs:
        export CCACHE_COMPRESS=1 
        export CCACHE_MAXSIZE=50G 
        export ARCH=arm64
-       export TZ=Asia/Jakarta
+       export TZ=Asia/Kolkata
        export KBUILD_BUILD_USER=${{ github.event.inputs.KBUILD_USER }}
        export KBUILD_BUILD_HOST=${{ github.event.inputs.KBUILD_HOST }}
        make O=out ARCH=arm64 ${{ github.event.inputs.KERNEL_DEFCONFIG }} 
@@ -209,8 +192,7 @@ jobs:
        LD=ld.lld 
        AR=llvm-ar 
        NM=llvm-nm 
-       STRIP=llvm-strip 
-       OBJCOPY=llvm-objcopy 
+       STRIP=ll      OBJCOPY=llvm-objcopy 
        OBJDUMP=llvm-objdump 
        READELF=llvm-readelf 
        make -j$(nproc --all) O=out ARCH=arm64 ${{ github.event.inputs.KERNEL_DEFCONFIG }} 
